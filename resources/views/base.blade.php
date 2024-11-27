@@ -19,21 +19,26 @@
               <li class="nav-item">
                 <a class="nav-link active" aria-current="page" href="{{ route('blog.index') }}">Blog</a>
               </li>
-              <li class="nav-item">
+              {{-- <li class="nav-item">
                 <a class="nav-link" href="#">Blog</a>
-              </li>
-              <li class="nav-item">
+              </li> --}}
+              {{-- <li class="nav-item">
                 <a class="nav-link" href="#">Article</a>
-              </li>
-              <li class="nav-item">
+              </li> --}}
+              {{-- <li class="nav-item">
                 <a class="nav-link disabled" aria-disabled="true">Disabled</a>
-              </li>
+              </li> --}}
             </ul>
           </div>
         </div>
       </nav>
 
     <div class="container"> 
+      @if (session('success'))
+      <div class="alert alert-success">
+        {{ session('success') }}
+      </div>
+      @endif
         @yield('content')
     </div>
 </body>
