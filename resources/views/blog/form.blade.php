@@ -15,14 +15,41 @@
             {{ $message }}
         @enderror
     </div>
-   <div class="form-group">
+<div class="form-group">
     <label for="content">Content</label>
     <textarea name="content" class="form-control" > {{ old('content', $post->content) }} </textarea>
     @error('content')
         {{ $message }}
     @enderror
-   </div>
-    
+</div>
+<div class="form-group">
+    <label for="category">Categories</label>
+    <select name="category_id" id="category" class="form-control">
+        <option value="" >Selectionner une categorie </option>
+        @foreach ($categories as $category)
+        <option  @selected(old('category_id', $post->category_id) == $category->id ) value="{{ $category->id }}"> {{ $category->name }} </option>
+            
+        @endforeach
+        </select>
+    @error('category_id')
+        {{ $message }}
+    @enderror
+</div>
+@php
+    $tagsIds = $post->tags()->pluck('id');
+@endphp
+<div class="form-group">
+    <label for="tag">Tag</label>
+    <select name="tags[]" id="tag" class="form-control" multiple>
+        @foreach ($tags as $tag)
+        <option  @selected($tagsIds->contains($tag->id)) value="{{ $tag->id }}"> {{ $tag->name }} </option>
+        @endforeach
+        </select>
+    @error('tag')
+        {{ $message }}
+    @enderror
+</div>
+
     <button class="btn btn-primary my-2 w-100">
         @if ($post->id)
             Modifier
