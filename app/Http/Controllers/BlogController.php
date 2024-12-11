@@ -10,6 +10,10 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Contracts\Pagination\Paginator;
 use App\Models\Post;
 use App\Models\Tag;
+use App\Models\User;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use Mockery\Matcher\Any;
 use Illuminate\View\View;
@@ -18,6 +22,12 @@ class BlogController extends Controller
 {
     
     public function index():View {
+    
+        // User::create([
+        //     "name"=> "bangoura",
+        //     "email"=> "bang@bks.gn",
+        //     "password"=> Hash::make('2222')
+        // ]);
         // $post = Post::find(4);
         // methode sync pour assigner et enlever un tag dans une table de relation
        // $tag = $post->tags()->sync([1, 2]);
@@ -93,7 +103,8 @@ class BlogController extends Controller
     }
 
     public function store(FormPostRequest $request) {
-        $post = Post::create($request->validated());
+        $post = new Post();
+        $post = Post::create($this->extractData( $post, $request));
         // $post = Post::create([
         //     'title'   => $request->input('title'),
         //     'content' => $request->input('content'),
@@ -111,10 +122,24 @@ class BlogController extends Controller
         ]);
     }
 
-    public function update(Post $post, FormPostRequest $request) { 
-        $post->update($request->validated());
+    public function update(Post $post, FormPostRequest $request) {         
+        $post->update($this->extractData( $post, $request));
         $post->tags()->sync($request->validated('tags'));
         return redirect()->route('blog.show', ['slug'=>$post->slug, 'post' => $post->id])->with('success','l\'article a bien ete modifier ');
     }
 
-}
+    private function extractData(Post $post, FormPostRequest $request):array
+    {
+        $data = $request->validated();
+        /**  @var UploadeadFile|null $image */
+        $image = $request->validated('image');
+        if( $image == null || $image->getError()) {
+            return $data;
+        }
+        if($post->image){
+            Storage::disk('public')->delete($post->image);
+        }
+        $data['image']= $image->store('blog', 'public');
+        return $data;
+        }
+    }

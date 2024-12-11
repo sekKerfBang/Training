@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AuthController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Http\Request;
 use \App\Models\Post;
@@ -20,12 +21,15 @@ Route::get('/', function () {
     return view('welcome');
 });
 
+Route::get('/login', [AuthController::class,'login'])->name('auth.login');
+Route::delete('/logout', [AuthController::class,'logout'])->name('auth.logout');
+Route::post('/login', [AuthController::class,'dologin']);
     Route::prefix('/blog')->name('blog.')->controller(BlogController::class)->group(callback: function (){
         Route::get('/', 'index' )->name('index');
-        Route::get('/new','create')->name('create');
-        Route::post('/new','store');
-        Route::get('/{post}/edit', 'edit')->name('edit');
-        Route::patch('/{post}/edit','update');
+        Route::get('/new','create')->name('create')->middleware('auth');
+        Route::post('/new','store')->middleware('auth');
+        Route::get('/{post}/edit', 'edit')->name('edit')->middleware('auth');
+        Route::patch('/{post}/edit','update')->middleware('auth');
         // function(Request $request){
         //     // Insertion des donnees dans la base de donnee
         //     // $post = new Post();

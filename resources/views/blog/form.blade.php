@@ -1,6 +1,13 @@
-<form action="" method="post">
+<form action="" method="post" enctype="multipart/form-data" >
     @csrf 
     @method($post->id ? "PATCH" : "POST")
+    <div class="form-group">
+        <label for="image">Image</label>
+        <input  class="form-control" type="file" id='image' name="image" >
+        @error('image')
+            {{ $message }}
+        @enderror
+    </div>
     <div class="form-group">
         <label for="title">Titre</label>
         <input  class="form-control" type="text" name="title" value="{{ old('title', $post->title) }}">
@@ -40,15 +47,15 @@
 @endphp
 <div class="form-group">
     <label for="tag">Tag</label>
-    <select name="tags[]" id="tag" class="form-control" multiple>
+    <select name="tags[]" id="tags" class="form-control" multiple>
         @foreach ($tags as $tag)
         <option  @selected($tagsIds->contains($tag->id)) value="{{ $tag->id }}"> {{ $tag->name }} </option>
         @endforeach
         </select>
-    @error('tag')
+    @error('tags')
         {{ $message }}
     @enderror
-</div>
+</div>   
 
     <button class="btn btn-primary my-2 w-100">
         @if ($post->id)

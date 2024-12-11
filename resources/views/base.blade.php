@@ -29,6 +29,25 @@
                 <a class="nav-link disabled" aria-disabled="true">Disabled</a>
               </li> --}}
             </ul>
+            <div class="navbar-nav ms-auto mb-2 mb-lg-0">
+              @auth
+              <strong>  {{ Auth::user()->name }} </strong>  ||
+              <form class="nav-item" action="{{ route('auth.logout') }}" method="post">
+                @method('delete')
+                @csrf
+                <button class="nav-link fw-bolder">
+                  Se deconnecter
+                </button>
+
+              </form>
+              @endauth
+              @guest
+              <div class="nav-item">
+                <a  class="nav-link" href="{{ route('auth.login') }}"> <strong> Se connecter </strong></a>
+              </div>
+                
+              @endguest
+            </div>
           </div>
         </div>
       </nav>

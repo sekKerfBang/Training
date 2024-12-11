@@ -7,7 +7,12 @@
         <p>
             {{ $post->content }}
         </p> 
-            {{-- <a href="{{ route('blog.show', ['slug'=> $post->slug, 'id'=> $post->id]) }}" class="btn btn-primary">Lire la suite</a> --}}
+        @if ($post->image)
+        <img style="width: 100%; height:500px; object-fit:cover; border-radius:5px;" src="{{ $post->imageUrl() }}" alt="">
+    @endif
+            <p class=" my-5" >
+                <a href="{{ route('blog.index') }}" class="btn btn-primary fw-bolder fs-5">accueil</a>
+            </p>
         
     </article> 
         

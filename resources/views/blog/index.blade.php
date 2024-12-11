@@ -15,7 +15,13 @@
                     <span class="badge bg-secondary"> {{ $tag->name }} </span>
                 @endforeach
             @endif
-             </p>
+            </p>
+            <p>
+                @if ($post->image)
+                <img style="width: 100%; height:200px; object-fit:cover" src="{{ $post->imageUrl() }}" alt="">
+            
+            @endif
+        </p>
         <p>
             {{ $post->content }}
         </p> 
